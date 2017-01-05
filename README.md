@@ -10,6 +10,8 @@
 
 ## 虚拟机玩嵌入式linux
 
+* ctr+a x退出虚拟机
+
 ### 运行u-boot
 1. 下载qemu 2.8源码, 编译并安装
 2. 下载u-boot, 配置vexpress_ca9x4_defconfig, 编译
@@ -51,6 +53,15 @@ _start () at ../arch/arm/lib/vectors.S:54
  5. sudo chmod +x /etc/qemu-if*
  6. sudo /opt/dev/qemu/bin/qemu-system-arm -M vexpress-a9 -cpu cortex-a9 -kernel ./u-boot/ovex/u-boot -nographic -append "console=tty0 console=ttyAMA0 rw" -net nic -net tap,ifname=tap0
  
+#### TFTP下载内核
+ 1. u-boot 环境变量设置:
+  * sete ipaddr 192.168.2.2
+  * sete serverip 192.168.2.1
+ 2. 下载内核及设备树
+  * tftp 0x61000000 zImage
+  * tftp 0x62000000 vexpress-v2p-ca9.dtb
+ 3. 运行内核
+  * bootz 0x61000000 - 0x62000000
 
 参考链接群:
 
@@ -58,3 +69,13 @@ _start () at ../arch/arm/lib/vectors.S:54
 * https://www.kernel.org/doc/Documentation/networking/tuntap.txt
 * https://en.wikibooks.org/wiki/QEMU/Networking
 * https://people.gnome.org/~markmc/qemu-networking.html
+
+#### 用忙盒(BusyBox) 制作极小根文件系统
+ 1. 安装并配置网络文件系统(NFS)
+ 2. 编译忙盒
+ 3. 手工制作极小根文件系统
+
+参考链接群:
+
+* https://help.ubuntu.com/community/NFSv4Howto
+* https://help.ubuntu.com/community/SettingUpNFSHowTo
